@@ -1,0 +1,575 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{graphs,graphdrawing}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{tkz-graph}
+\usegdlibrary{trees}
+
+
+\usepackage[margin=2cm]{geometry}
+
+\usepackage[utf8]{inputenc}
+\begin{document}
+	\section{Esercitazione 1}
+	\subsection{Esercizio 1}
+	
+	Dimostrare che \( P(a | b \land	a) = 1  \). \\
+	
+	Possiamo riscrivere  \( P(a | b \land	a)\) come 
+	\begin{equation}
+	P(a | b \land	a) = \frac{ P(a \land b \land a)}{P(b \land a)}
+	\end{equation}
+
+	Questo per la definizione di probabilità condizionata che dice che:
+	\[ P(A | B) = \frac{ P(A \land B )}
+					    {P(B)}\]
+					    
+	Sappiamo anche che \(P(a \land b \land a)\) = \(P(a \land b)\), per cui possiamo riscrivere l'equazione 1 come
+	
+	\[P(a | b \land	a) = \frac{ P(a \land b)}{P(b \land a)}\] e dato che \(P(a \land b)\) = \(P(b \land a)\) possiamo concludere che \( P(a | b \land	a) = 1  \).
+	
+	
+	\subsection{Esercizio 2}
+	Date le seguenti belief di un agente razionale: \\
+	\\
+	\( P(A) = 0.4 \) \hspace{2cm}   \( P(B) = 0.3 \) \hspace{2cm} 	\( P(A \lor B) = 0.5 \) \\
+	
+	Quale range di probabilità è ragionevole per  	\( A \land V \) ? \\
+	
+	Sapendo che 
+	\[ P(A \lor B) = P(A) + P(B) - P(A \land B) \] 
+	y
+	\[0.4 + 0.3 - P(A \land B) = 0.5 \]
+	
+	Da cui:
+	
+	\[P(A \land B) = 0.2 \]
+	\pagebreak
+	\subsection{Esercizio 3}
+	Supponiamo di conoscere che la probabilità con cui un
+	semaforo diventi verde sia pari a 0.45, arancione pari a
+	0.1 e che diventi rosso sia pari a 0.45.
+	Inoltre, supponiamo di avere la probabilità del 25\% di
+	passare con il semaforo rosso senza prendere una
+	multa , e il 5\% di probabilità di prendere una multa
+	passando con il semaforo arancione
+	
+	In aggiunta, supponiamo che prendendo una multa, c’è
+	il 90\% di probabilità che si sia successivamente di
+	cattivo umore; senza multa la probabilità è del 5\%.
+	
+	Qual è la probabilità totale di essere di cattivo umore?
+	\\
+	\vspace{2cm}
+	\\
+	\begin{center}
+	\begin{tikzpicture}
+		\graph[tree layout,grow=right,fresh nodes] {
+			"" -- {
+				"green (0.45)" -- {
+					"ticket (0)" -- {
+						"bad-mood (0.9)",
+						"good mood (0.1)" 
+					},
+					"not ticket (1)" -- {
+						"bad-mood (0.05)",
+						"good mood (0.95)" 
+					},  
+				},
+				"yellow (0.1)" -- {
+					"ticket (0.05)" -- {
+						"bad-mood (0.9)",
+						"good mood (0.1)" 
+					},
+					"not ticket (0.95)" -- {
+						"bad-mood (0.05)",
+						"good mood (0.95)" 
+					},  
+				},
+				"red (0.45)" -- {
+					"ticket (0.25)" -- {
+						"bad-mood (0.9)",
+						"good mood (0.1)" 
+					},
+					"not ticket (0.75)" -- {
+						"bad-mood (0.05)",
+						"good mood (0.95)" 
+					},  
+				},
+			}
+		};
+	\end{tikzpicture}
+	\end{center}		    
+
+Possiamo costruire la matrice delle probabilità congiunte:
+\begin{center}
+	\begin{tabular}{ |c|c|c|c|c|c|c| } 
+		\hline
+		 & \multicolumn{2}{|c|}{Green} & \multicolumn{2}{|c|}{Yellow} & \multicolumn{2}{|c|}{Red} 
+		\\ \hline
+		& Ticket & \lnot Ticket & Ticket &  \lnot Ticket & Ticket & \lnot Ticket 
+		\\ \hline
+		Bad  & 0.45 * 0 * 0.9 &  0.45 * 1 * 0.05  & 0.1 * 0.05 *0.9  & 0.1 * 0.95 *0.05  & 0.45 * 0.25 *0.9 &  0.45 * 0.75 * 0.05
+		\\ \hline
+		Good & 0.45 * 0 * 0.1 &  0.45 * 1 * 0.95  & 0.1 * 0.05 *0.1  & 0.1 * 0.95 *0.95  & 0.45 * 0.25 *0.1 &  0.45 * 0.75 * 0.95
+		\\ \hline
+	\end{tabular}
+\end{center}
+
+Da cui:
+
+\begin{center}
+	\begin{tabular}{ |c|c|c|c|c|c|c| } 
+		\hline
+		& \multicolumn{2}{|c|}{Green} & \multicolumn{2}{|c|}{Yellow} & \multicolumn{2}{|c|}{Red} 
+		\\ \hline
+		& Ticket & \lnot Ticket & Ticket &  \lnot Ticket & Ticket & \lnot Ticket 
+		\\ \hline
+		Bad  & 0  & 0.0225  &  0.0045  & 0.00475  & 0.10125  &  0.016875
+		\\ \hline
+		Good & 0  & 0.4275  &  0.00005 & 0.09025  & 0.01125  &  0.320625
+		\\ \hline
+	\end{tabular}
+\end{center}
+
+\pagebreak
+
+\subsection{Esercizio 4}
+Una società di consulenza ha creato un modello per prevedere le recessioni. Il modello
+prevede una recessione con l’80\% di probabilità quando la recessione avviene realmente
+e con il 10\% di probabilità quando non avviene. La probabilità incondizionata che si entri
+in una fase di recessione è del 20\%. Se il modello prevede la recessione, qual è la
+probabilità che la recessione avvenga?
+\\  
+\\
+Sappiamo che  \\
+
+\[ P(rec. \; pred. \;|\; rec. \; coming) = \frac{8}{10} \] ,che  \[ P(rec. pred. \;|\; rec. \; not  \; coming) = \frac{1}{10} \] e che  \( P(rec.\; coming) = \frac{2}{10} \) \\
+
+Vogliamo trovare \( P(rec.\; coming \;|\; rec.\; pred)  \) \\
+
+Per la regola di Bayes sappiamo che :
+
+\[
+	P(rec.\; coming \;|\; rec.\; pred) = \frac{	P(rec.\; pred \;|\;  rec.\; coming ) * P(rec.\; coming )}{P(rec. \; pred)}
+\]
+
+Qual'è la \(P(rec. \; pred)\) ? \\
+
+Sappiamo che 
+\[
+P(rec. \; pred) = P(rec. \; pred \;|\; rec. coming) * P(rec. \; coming) + 
+P(rec. \; pred \;|\; rec. \; not \; coming) * P(rec. \; not \; coming) 
+\]
+
+Inoltre se  \( P(rec.\; coming) = \frac{2}{10} \) segue che \( P(rec.\; not \; coming) = \frac{8}{10} \) \\
+
+Da cui:
+
+\[
+P(rec. \; pred) =  \frac{8}{10} \cdot \frac{2}{10} + \frac{1}{10}\cdot \frac{8}{10} = \frac{24}{100}
+\]
+
+Concludendo quindi che :
+
+\[
+P(rec.\; coming \;|\; rec.\; pred) = \frac{	\frac{8}{10} \cdot	\frac{2}{10}}{\frac{24}{100}} = \frac{\frac{16}{100}}{\frac{24}{100}} =
+{\frac{16}{100}} \cdot {\frac{100}{24}} = \frac{2}{3}
+\]
+
+\pagebreak
+
+\subsection{Esercizio 5}
+Sviluppare una rete di Bayes, per calcolare la probabilità che uno studente superi l’esame di MPD. \\ Le proprietà di interesse del problema sono:
+
+\begin{itemize}
+	\item Il superamento dell’esame \( EX \in \{true, false\} \ \)
+	\item L’acquisizione di buone capacità pratiche in MPD da parte dello studente \( PR \in \{true, false\} \ \)
+	\item L’acquisizione di buone capacità teoriche in MPD da parte dello studente \( TE \in \{true, false\} \ \)
+	\item Lo studente è efficientemente studioso \( ST \in \{true, false\} \ \)
+	\item La quantità di esercitazioni seguite dallo studente \( QE \in \{molte, poche, nessuna\} \ \)
+	\item L’aver fatto un numero sufficiente di esercizi \( SE \in \{true, false\} \ \)
+	
+\end{itemize}
+
+Costruire una rete bayesiana che rappresenti la conoscenza probabilistica relativa
+al dominio descritto dalle seguenti relazioni di dipendenza tra le variabili casuali:
+
+\begin{itemize}
+	\item Il superamento dell’esame dipende dalle capacità
+	teoriche e pratiche dello studente
+	\item Se uno studente è studioso ha buone probabilità di acquisire
+	capacità teoriche.
+	\item Il numero di esercitazioni seguite dipende da quanto uno
+	studente è studioso
+	\item L’aver fatto sufficienti esercizi dipende dal numero di
+	esercitazioni seguite, ed influenza le capacità pratiche dello
+	studente.
+\end{itemize}
+
+Dobbiamo un creare un DAG a partire dai sequenti nodi: \\
+
+\begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill}}
+		\Vertex{QE}
+		\NOEA(QE){SE}  \EA(SE){PR} \SOEA(PR){EX}
+		\SOEA(QE){ST}  \EA(ST){TE}
+	\end{tikzpicture}
+\end{center}
+\pagebreak
+
+Sappiamo che il superamento dell'esame \(EX\) dipende  dalle capacità teoriche (\(TE\)) e pratiche (\(PR\)) dello studente	
+
+\begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill}}
+		\Vertex{QE}
+		\NOEA(QE){SE}  \EA(SE){PR} \SOEA(PR){EX}
+		\SOEA(QE){ST}  \EA(ST){TE}
+		 \tikzset{EdgeStyle/.style={->}}
+		\Edge(PR)(EX)
+		\Edge(TE)(EX)
+	\end{tikzpicture}
+\end{center}		
+
+Sappiamo anche che se uno studente è studioso  (\(ST\)) ha buone probabilità di acquisire capacità teoriche  (\(TE\)).
+
+\begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill}}
+		\Vertex{QE}
+		\NOEA(QE){SE}  \EA(SE){PR} \SOEA(PR){EX}
+		\SOEA(QE){ST}  \EA(ST){TE}
+		\tikzset{EdgeStyle/.style={->}}
+		\Edge(PR)(EX)
+		\Edge(TE)(EX)
+		\Edge(ST)(TE)
+	\end{tikzpicture}
+\end{center}
+
+Sappiamo anche che la quantità di esercitazioni seguite  (\(TE\))  dipende da quanto lo studente sia studioso  (\(ST\))
+
+\begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill}}
+		\Vertex{QE}
+		\NOEA(QE){SE}  \EA(SE){PR} \SOEA(PR){EX}
+		\SOEA(QE){ST}  \EA(ST){TE}
+		\tikzset{EdgeStyle/.style={->}}
+		\Edge(PR)(EX)
+		\Edge(TE)(EX)
+		\Edge(ST)(TE)
+		\Edge(ST)(QE)
+	\end{tikzpicture}
+\end{center}
+
+Inioltre sappiamo è che avere fatto un numero sufficente di esercizi (\(SE\)) dipende dalla quantità di esercitazioni seguite (\(QE\))
+
+\begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill}}
+		\Vertex{QE}
+		\NOEA(QE){SE}  \EA(SE){PR} \SOEA(PR){EX}
+		\SOEA(QE){ST}  \EA(ST){TE}
+		\tikzset{EdgeStyle/.style={->}}
+		\Edge(PR)(EX)
+		\Edge(TE)(EX)
+		\Edge(ST)(TE)
+		\Edge(ST)(QE)
+		\Edge(QE)(SE)
+	\end{tikzpicture}
+\end{center}
+
+Infine sappiamo che avere svolto un numero sufficiente di esercizi influenza le capacità pratiche dello studente.
+
+\begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill}}
+		\Vertex{QE}
+		\NOEA(QE){SE}  \EA(SE){PR} \SOEA(PR){EX}
+		\SOEA(QE){ST}  \EA(ST){TE}
+		\tikzset{EdgeStyle/.style={->}}
+		\Edge(PR)(EX)
+		\Edge(TE)(EX)
+		\Edge(ST)(TE)
+		\Edge(ST)(QE)
+		\Edge(QE)(SE)
+		\Edge(SE)(PR)
+	\end{tikzpicture}
+\end{center}
+\pagebreak
+ 
+ Abbiamo ora la struttura topologica, è neccessario avere anche le distribuzione di probabilità a priori o condizionate.
+
+Il nodo (\(ST\)) ha una distribuzione di proprità a priori per i suoi possibili valori (\({true, false}\)).
+
+Tutte le altre probabilità sono condizionate da uno o più genitori:
+
+Prendiamo dei dati a caso come esempio:
+\\
+
+\begin{tabular}{|ll|}
+	\hline
+	\multicolumn{2}{|l|}{\(P(ST) \)}         \\ \hline
+	\multicolumn{1}{|l|}{\(true\)} & \(false\) \\ \hline
+	\multicolumn{1}{|l|}{0.7}  & 0.3   \\ \hline
+\end{tabular}
+
+
+
+Per quando riguarda ad esempio la probabilità \(TE\)  è condizionata da un solo genitore \(ST\), avremo quindi una situazione di questo tipo:
+\\
+
+\begin{tabular}{|l|ll|}
+	\hline
+	ST    & \multicolumn{2}{l|}{P(TE |ST)} \\ \hline
+	& \multicolumn{1}{l|}{T}   & F   \\ \hline
+	true  & \multicolumn{1}{l|}{x}   & 1-x    \\ \hline
+	false & \multicolumn{1}{l|}{y}   & 1-y   \\ \hline
+\end{tabular}
+
+Se prendiamo una probabilità con due genitori, come \(EX\), avremo una situazione di questo tipo:
+\\
+
+\begin{tabular}{|ll|ll|}
+	\hline
+	\multicolumn{2}{|l|}{}              & \multicolumn{2}{l|}{P(EX |TE, PR)} \\ \hline
+	\multicolumn{1}{|l|}{TE}    & PR    & \multicolumn{1}{l|}{true}  & false \\ \hline
+	\multicolumn{1}{|l|}{true}  & true  & \multicolumn{1}{l|}{x}     &       \\ \hline
+	\multicolumn{1}{|l|}{false} & false & \multicolumn{1}{l|}{y}     &       \\ \hline
+	\multicolumn{1}{|l|}{false} & true  & \multicolumn{1}{l|}{z}     &       \\ \hline
+	\multicolumn{1}{|l|}{false} & false & \multicolumn{1}{l|}{a}     &       \\ \hline
+\end{tabular}
+
+Proviamo a costruire la tabella della probabilità \(QE\) con dei valori plausibili, un esempio potrebbe essere:
+\\
+
+\begin{tabular}{|c|ccc|}
+	\hline
+	ST    & \multicolumn{3}{c|}{P(EX |TE, PR)}                                \\ \hline
+	& \multicolumn{1}{c|}{molte} & \multicolumn{1}{c|}{poche} & nessuna \\ \hline
+	true  & \multicolumn{1}{c|}{0.5}   & \multicolumn{1}{c|}{0.3}   & 0.2     \\ \hline
+	false & \multicolumn{1}{c|}{0}     & \multicolumn{1}{c|}{0.1}   & 0.9     \\ \hline
+\end{tabular}
+  
+ \pagebreak
+ 
+ \subsection{Esercizio 6}
+ Consideriamo questa rete bayesiana:
+ \\
+ \begin{center}
+ 	\begin{tikzpicture}
+ 		\SetUpEdge[lw         = 1.5pt,
+ 		color      = orange,
+ 		labelcolor = white]
+ 		\GraphInit[vstyle=Normal] 
+ 		\SetGraphUnit{3}
+ 		\tikzset{VertexStyle/.append  style={fill}}
+ 		\Vertex{A}
+ 		\tikzset{EdgeStyle/.style={->}}
+ 		\SOWE(A){C}  \SO(A){D} \SOEA(A){F}
+ 		\SO(C){B}    \SO(D){E}
+ 		\Edge(A)(C)
+ 		\Edge(A)(D)
+ 		\Edge(A)(F)
+ 		\Edge(C)(D)
+ 		\Edge(F)(E)
+ 		\Edge(D)(E)
+ 		\Edge(B)(C)
+ 		\Edge(B)(E)
+ 	\end{tikzpicture}
+ \end{center}
+
+Quali sono le probabilità da definire per avere una rete bayesiana?
+\\
+
+\begin{itemize}
+	\item \( P(A) \)
+	\item \( P(B) \)
+	\item \( P(C | B, A) \)
+	\item \( P(D | C, A) \)
+	\item \( P(E | B,D,F) \)
+	\item \( P(F | A) \)
+\end{itemize}
+
+\pagebreak
+
+ \subsection{Esercizio 7}
+  Un paziente si reca dal dottore per sottoporre una patologia, il dottore sospetta 3 possibili malattie come
+ causa della condizione patologica. Le 3 malattie sono \(D_1, D_2, D_3 \) le quali sono marginalmente
+ indipendenti tra loro. Ci sono 4 sintomi \(S_1, S_2, S_3, S_4 \) di cui il dottore vuole verificare la presenza in modo
+ da trovare la causa più probabile per la condizione patologica. I sintomi sono condizionalmente dipendenti
+ alle 3 malattie come segue: \(S_1\) dipende solamente da \(D_1\), \(S_2\) dipende da \(D_1\) e da \(D_2\) , \(S_3\) dipende da \(D_1\) e da \(D_3\), e \(S_4\) dipende solamente da \(D_3\). Si assuma che tutte le variabili casuali siano booleane.
+ 
+ \begin{itemize}
+ 	\item Costruire la struttura topologica alla rete bayesiana per il problema descritto.
+\end{itemize}
+
+ \begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill}}
+		\Vertex{D1}
+		\EA(D1){D2}
+		\EA(D2){D3}
+		\SOEA(D1){S1}
+		\EA(S1){S2}
+		\EA(S2){S3}
+		\EA(S3){S4}
+		\tikzset{EdgeStyle/.style={->}}
+		\Edge(D1)(S1)
+		\Edge(D1)(S2)
+		\Edge(D2)(S2)
+		\Edge(D3)(S3)
+		\Edge(D1)(S3)
+		\Edge(D3)(S4)
+	\end{tikzpicture}
+\end{center}
+
+ \begin{itemize}
+	\item Scrivere la distribuzione di probabilità congiunta espressa come prodotto delle probabilità condizionate
+\end{itemize}
+
+\[P(D_1, D_2, D_3, S_1, S_2, S_3, S_4) = \]
+\[= P(D_1) \cdot P(D_2) \cdot P(D_3) \cdot    \]
+\[= P(S_1 \;|\; D_1) \cdot  P(S_2 \;|\; D_1, D_2)\cdot    \]
+\[= P(S_3 \;|\; D_1, D_3) \cdot  P(S_4 \;|\; D_3)  \]
+
+
+ \begin{itemize}
+	\item Qual è il numero di parametri indipendenti richiesti per descrivere la distribuzione congiunta?
+\end{itemize}
+
+Iniziamo ad immaginare le CPT (\textit{conditional probability table}) di ogni nodo.
+
+Ad esempio per \(D_1\) avremo due valori nella CPT (\(true\; e\; false\)), così come  \(D_2\) e  \(D_3\).
+
+Invece  \(S_1\) ha un genitore  ( \(D_1\)) per cui la tabella avrà quattro possibili valori.
+
+Analogamente  \(S_2\) ha due  ( \(D_1\) e \(D_2\)) per cui la tabella avrà otto possibili valori.
+
+Seguendo con questo ragionamento arriveremo ad avere
+\[2 + 2 + 2 + 4 + 8 + 8 + 4 = 30\] parametri.
+
+Come possiamo stimare i parametri indipendenti?
+
+Essendo una distribuzione booleana per \(D_1\), \(D_2\) e \(D_3\) serve un parametro per ciascuno.
+
+Per  \(S_1\) ne serviranno 2, così come per \(S_4\): per \(S_2\) ed \(S_3\) serviranno 4 variabili, in totale serviranno quindi 15 parametri.
+
+ \begin{itemize}
+	\item Assumendo che non ci sia dipendenza condizionale tra le variabili, quanti parametri indipendenti sarebbero
+	dunque richiesti?
+\end{itemize}
+
+\[2^7 -1\]
+
+\pagebreak
+
+\subsection{Esercizio 8}
+
+Supponiamo di avere la seguente rete Bayesiana su spazio booleano.
+
+ \begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill}}
+		\Vertex{A}
+		\EA(A){B}
+		\EA(B){C}
+		\SOEA(A){D}
+		\EA(D){E}
+		\tikzset{EdgeStyle/.style={->}}
+		\Edge(A)(D)
+		\Edge(B)(D)
+		\Edge(B)(E)
+		\Edge(C)(E)
+	\end{tikzpicture}
+\end{center}
+
+Sappiamo che \(P(A \; = \; T) = 0.2 \), \(P(B \; = \; T) = 0.2 \) e che \(P(C \; = \; T) = 0.8 \)
+
+
+Sappiamo inoltre che:
+
+\begin{tabular}{|c|c|c|}
+	\hline
+	A & B & P(D = T | A,B) \\ \hline
+	T & T & 0.1        \\ \hline
+	T & F & 0.5        \\ \hline
+	F & T & 0.6        \\ \hline
+	F & F & 0.9        \\ \hline
+\end{tabular}
+
+ e che  \\
+\begin{tabular}{|c|c|c|}
+ 	\hline
+ 	C & B & P(E = T | C,B) \\ \hline
+ 	T & T & 0.3        \\ \hline
+ 	T & F & 0.8        \\ \hline
+ 	F & T & 0.4        \\ \hline
+ 	F & F & 0.2        \\ \hline
+\end{tabular}
+
+\begin{itemize}
+	\item Qual è la probabilità che tutte le variabili siano false?
+\end{itemize}
+
+
+\[ P(A = F, B = F, C =F, D = F, E = F) = \] 
+
+\[ = P(A = F) \cdot P(B = F) \cdot P(C = F) \cdot  P(D = F | A=F, B = F) \cdot P(E = F | B=F, C = F) \] 
+
+\[ = 0.6 \cdot 0.5 \cdot 0.2 \cdot 0.1 \cdot 0.8 = 0.064 \] 
+
+\begin{itemize}
+	\item Qual è la probabilità di A, avendo la conoscenza che tutte le altre variabili sono vere?
+\end{itemize}
+
+Formalmente la richiesta è
+
+\[ P(A  |B = T, C = T, D = T, E = T)\] che corrisponde all'unione di  \[ P(A = T |B = T, C = T, D = T, E = T)\] e \[ P(A = F |B = T, C = T, D = T, E = T)\]
+
+https://elearning.unimib.it/pluginfile.php/1002302/mod\_resource/content/2/Esercitazione\%202.pdf
+\
+\end{document}
