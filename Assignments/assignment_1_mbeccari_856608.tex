@@ -1,0 +1,432 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{graphs,graphdrawing}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{amsmath}
+
+\usepackage{tkz-graph}
+\usegdlibrary{trees}
+
+
+\usepackage[margin=2cm]{geometry}
+
+\usepackage[utf8]{inputenc}
+\begin{document}
+	{Michele Beccari 856608 - Modelli Probabilistici per le Decisioni -  Assignment 1 - Aprile 2023} 
+	\section{Assignment 1}
+Supponiamo di avere 3 monete truccate, denotate  a, b e c, in una borsa.
+	
+La probabilità che esca "testa" lanciando a, b e c è del 20\%, 60\% e 80\%, rispettivamente.
+	
+Estraggo una moneta dalla borsa (la probabilità di estrarre a, b o c è la stessa) e la lancio 3 volte.
+
+\begin{itemize}
+	\item Disegnare la Rete Bayesiana corrispondente (specificando le CPT). Caricare un'immagine o un documento contenente il disegno della Rete.
+\end{itemize}
+
+Per quanto detto al punto uno il gioco è rappresentato dalle seguenti variabili:
+
+\begin{itemize}
+	\item \(MP\) la moneta pescata dalla borsa
+	\item \(R1\) il risultato del primo lancio
+	\item \(R2\) il risultato del secondo lancio
+	\item \(R3\) il risultato del terzo lancio
+\end{itemize}
+
+I tre lanci della moneta sono indipendenti fra di loro (il fatto che esca testa o croce al primo lancio non influenza il risultato dei successivi lanci) , mentre ogni lancio è dipendente da quale moneta è stata estratta.
+
+ \begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={text = black}}
+		\Vertex{MP}
+		\tikzset{EdgeStyle/.style={->}}
+		\SO(MP){R2} \EA(R2){R3} \WE(R2){R1}
+		\Edge(MP)(R1)
+		\Edge(MP)(R2)
+		\Edge(MP)(R3)
+	\end{tikzpicture}
+\end{center}
+	
+Dopo avere definito la topologia della rete possiamo andare a definire le CPT. \\
+
+{\renewcommand{\arraystretch}{1.5}%
+\begin{tabular}{|ccc|}
+	\hline
+	\multicolumn{3}{|c|}{\(P(MP)\)}                          \\ \hline
+	\multicolumn{1}{|c|}{a} & \multicolumn{1}{c|}{b} & c \\ \hline
+	\multicolumn{1}{|c|}{$\frac{1}{3}$} & \multicolumn{1}{c|}{$\frac{1}{3}$} & {$\frac{1}{3}$} \\ \hline
+\end{tabular}} \quad
+
+\vspace{0.3cm}
+
+\begin{minipage}[t]{0.3\textwidth}
+	{\renewcommand{\arraystretch}{1.5}%
+	\begin{tabular}{|c|cc|}
+		\hline
+		& \multicolumn{2}{c|}{\(P(R1 | MP)\)}  \\ \hline
+		MP & \multicolumn{1}{c|}{T}    & C    \\ \hline
+		a  & \multicolumn{1}{c|}{$\frac{2}{10}$} & $\frac{8}{10}$ \\ \hline
+		b  & \multicolumn{1}{c|}{$\frac{6}{10}$} & $\frac{4}{10}$ \\ \hline
+		c  & \multicolumn{1}{c|}{$\frac{8}{10}$} & $\frac{2}{10}$ \\ \hline
+	\end{tabular}} \quad
+\end{minipage}
+\begin{minipage}[t]{0.3\textwidth}
+		{\renewcommand{\arraystretch}{1.5}%
+		\begin{tabular}{|c|cc|}
+			\hline
+			& \multicolumn{2}{c|}{\(P(R2 | MP)\)}  \\ \hline
+			MP & \multicolumn{1}{c|}{T}    & C    \\ \hline
+			a  & \multicolumn{1}{c|}{$\frac{2}{10}$} & $\frac{8}{10}$ \\ \hline
+			b  & \multicolumn{1}{c|}{$\frac{6}{10}$} & $\frac{4}{10}$ \\ \hline
+			c  & \multicolumn{1}{c|}{$\frac{8}{10}$} & $\frac{2}{10}$ \\ \hline
+	\end{tabular}} \quad
+\end{minipage}
+\begin{minipage}[t]{0.3\textwidth}
+		{\renewcommand{\arraystretch}{1.5}%
+		\begin{tabular}{|c|cc|}
+			\hline
+			& \multicolumn{2}{c|}{\(P(R3 | MP)\)}  \\ \hline
+			MP & \multicolumn{1}{c|}{T}    & C    \\ \hline
+			a  & \multicolumn{1}{c|}{$\frac{2}{10}$} & $\frac{8}{10}$ \\ \hline
+			b  & \multicolumn{1}{c|}{$\frac{6}{10}$} & $\frac{4}{10}$ \\ \hline
+			c  & \multicolumn{1}{c|}{$\frac{8}{10}$} & $\frac{2}{10}$ \\ \hline
+	\end{tabular}} \quad
+\end{minipage}
+
+
+\newpage
+
+\begin{itemize}
+	\item Calcolare la probabilità che avendo ottenuto Testa, Testa, Croce la moneta estratta sia la a.
+\end{itemize}
+
+Per soddisfare la richiesta dobbiamo calcolare la distribuzione di probabilità congiunta sapendo che :
+
+\[
+	P(A | R1 \;=\; T,\;  R2 \;=\; T,\; R3 \;=\; C) \; \lor \; P(B | R1 \;=\; T,\;  R2 \;=\; T,\; R3 \;=\; C) \; \lor \; P(B | R1 \;=\; T,\;  R2 \;=\; T,\; R3 \;=\; C) = 1
+\]
+
+Procediamo quindi con il calcolo delle probabilità delle singole monete per la costante di normalizzazione \(\alpha\):
+
+\[
+P(A | R1 \;=\; T,\;  R2 \;=\; T,\; R3 \;=\; C) = 
+\]
+
+\[
+= \alpha \cdot P(A) \cdot  P(R1 = T|A) \cdot  P(R2 = T|A)  \cdot  P(R3 = C|A) = 
+\]
+
+Essendo i tre lanci di monete indipendenti sappiamo che:
+\[
+ P(R1 = T|A) =  P(R2= T|A)
+\]
+
+da cui 
+
+\[
+= \alpha \cdot P(A) \cdot  P(R1 = T|A)^2 \cdot P(R3= C|A)  = 
+\]
+
+\[
+= \alpha \cdot \frac{1}{3} \cdot  (\frac{2}{10})^2 \cdot \frac{8}{10}  = 
+\]
+
+\[
+= \alpha \cdot \frac{4}{375}
+\]
+
+Per B avremo:
+
+\[
+P(B | R1 \;=\; T,\;  R2 \;=\; T,\; R3 \;=\; C) = 
+\]
+
+\[
+= \alpha \cdot P(B) \cdot  P(R1 = T|B) \cdot  P(R2 = T|B)  \cdot  P(R3 = C|B) = 
+\]
+
+Essendo i tre lanci di monete indipendenti sappiamo che:
+\[
+P(R1|B) =  P(R2|B)
+\]
+
+da cui:
+
+\[
+= \alpha \cdot P(B) \cdot  P(R1 = T|B)^2  \cdot P(R3 = C|B) = 
+\]
+
+\[
+= \alpha \cdot \frac{1}{3} \cdot (\frac{6}{10})^2 \cdot (\frac{4}{10})   = 
+\]
+
+
+\[
+= \alpha \cdot \frac{6}{125}
+\]
+
+Seguendo lo stesso ragionamento per \(C\):
+
+\[
+= \alpha \cdot P(C) \cdot  P(R1 = T|C)^2 \cdot  P(R3 = C|C) = 
+\]
+
+\[
+= \alpha \cdot \frac{1}{3} \cdot  (\frac{8}{10})^2 \cdot \frac{2}{10}  = 
+\]
+
+\[
+= \alpha \cdot \frac{16}{375}
+\]
+
+\pagebreak
+
+A questo punto possiamo calcolare la costante di normalizzazione \(\alpha\)
+
+\[
+\alpha = \frac{1}
+{
+	\frac{4}{375} + \frac{6}{125} + \frac{16}{375}
+} = 
+\frac{375}{38}
+\]
+
+Da cui concludiamo che
+\[
+P(A | R1 \;=\; T,\;  R2 \;=\; T,\; R3 \;=\; C) = 
+\]
+
+\[
+ = \alpha \cdot \frac{4}{375} =  \frac{375}{38} \cdot \frac{4}{375} \approx 0.1053
+\]
+
+\pagebreak
+
+\begin{itemize}
+	\item Data la seguente Rete Bayesiana, si risponda (vero o falso) se le seguenti affermazioni di indipendenza condizionale sono riflesse dalla struttura della rete
+\end{itemize}
+
+ \begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill}}
+		\Vertex{S}
+		\tikzset{EdgeStyle/.style={->}}
+		\SO(S){W}  \WE(W){R}
+		\SO(R){A} \SO(S){W}  \EA(W){J}
+		\SO(J){F} \SO(W){D}
+		\Edge(S)(R)
+		\Edge(S)(W)
+		\Edge(S)(J)
+		\Edge(W)(R)
+		\Edge(W)(J)
+		\Edge(R)(A)
+		\Edge(R)(D)
+		\Edge(A)(D)
+		\Edge(D)(F)
+		\Edge(J)(F)
+	\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+	\item R e J d-separano F e S?
+\end{itemize}
+
+ \begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill = white} }
+		\Vertex{S}
+		\tikzset{EdgeStyle/.style={->}}
+		\SO(S){W} 
+		\tikzset{VertexStyle/.append  style={fill = gray, text=white} }
+ 		\WE(W){R} \EA(W){J}
+ 		\tikzset{VertexStyle/.append  style={fill = white, text=black} }
+		\SO(R){A} \SO(S){W}  
+		\SO(J){F} \SO(W){D}
+		\Edge(S)(R)
+		\Edge(S)(W)
+		\Edge(S)(J)
+		\Edge(W)(R)
+		\Edge(W)(J)
+		\Edge(R)(A)
+		\Edge(R)(D)
+		\Edge(A)(D)
+		\Edge(D)(F)
+		\Edge(J)(F)
+	\end{tikzpicture}
+\end{center}
+
+R e J d-separano F e S perchè sono presenti quattro casi di archi di "tail-to-head" (S -> R -> D)  (S -> J -> F) (W -> J -> F) (S -> R -> A )  che bloccano tutti i cammini non orientati da F a S.
+\pagebreak
+
+\begin{itemize}
+	\item J d-separa F e W?
+\end{itemize}
+
+ \begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill = white} }
+		\Vertex{S}
+		\tikzset{EdgeStyle/.style={->}}
+		\SO(S){W} 
+		\tikzset{VertexStyle/.append  style={fill = white, text=black} }
+		\WE(W){R} 
+		\tikzset{VertexStyle/.append  style={fill = gray, text=white} }
+		\EA(W){J}
+		\tikzset{VertexStyle/.append  style={fill = white, text=black} }
+		\SO(R){A} \SO(S){W}  
+		\SO(J){F} \SO(W){D}
+		\Edge(S)(R)
+		\Edge(S)(W)
+		\Edge(S)(J)
+		\Edge(W)(R)
+		\Edge(W)(J)
+		\Edge(R)(A)
+		\Edge(R)(D)
+		\Edge(A)(D)
+		\Edge(D)(F)
+		\Edge(J)(F)
+	\end{tikzpicture}
+\end{center}
+
+J non  d-separa  F e W perché su un cammino non orientato tra F e W  non è presente nessun tipo di blocco (F -> D -> R -> W -> S)
+
+
+\begin{itemize}
+	\item W e R d-separano D e S?
+\end{itemize}
+
+ \begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill = white} }
+		\Vertex{S}
+		\tikzset{EdgeStyle/.style={->}}
+		\tikzset{VertexStyle/.append  style={fill = gray, text=white} }
+		\SO(S){W} 
+		\WE(W){R}
+		\tikzset{VertexStyle/.append  style={fill = white, text=black} }
+		\EA(W){J}
+		\SO(R){A}
+		\SO(J){F} \SO(W){D}
+		\Edge(S)(R)
+		\Edge(S)(W)
+		\Edge(S)(J)
+		\Edge(W)(R)
+		\Edge(W)(J)
+		\Edge(R)(A)
+		\Edge(R)(D)
+		\Edge(A)(D)
+		\Edge(D)(F)
+		\Edge(J)(F)
+	\end{tikzpicture}
+\end{center}
+
+W e R d-separano D e S perchè tutti i cammini non orientati sono bloccati: sono presenti tre  blocchi di tipo "tail-to-head" (S -> W -> J) (S -> R -> D) (S -> R -> A) e un blocco di tipo "head-to-head" (J -> F <- D)
+
+\pagebreak
+\begin{itemize}
+	\item R d-separa D e J?
+\end{itemize}
+
+ \begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill = white} }
+		\Vertex{S}
+		\tikzset{EdgeStyle/.style={->}}
+		\SO(S){W} 
+		\tikzset{VertexStyle/.append  style={fill = gray, text=white} }
+		\WE(W){R}
+		\tikzset{VertexStyle/.append  style={fill = white, text=black} }
+		\EA(W){J}
+		\SO(R){A}
+		\SO(J){F} \SO(W){D}
+		\Edge(S)(R)
+		\Edge(S)(W)
+		\Edge(S)(J)
+		\Edge(W)(R)
+		\Edge(W)(J)
+		\Edge(R)(A)
+		\Edge(R)(D)
+		\Edge(A)(D)
+		\Edge(D)(F)
+		\Edge(J)(F)
+	\end{tikzpicture}
+\end{center}
+
+
+R d-separa D e J perchè sono presenti tre  blocchi di tipo "tail-to-head" (W -> R -> D) (S -> R -> A) (W -> R -> A) e un blocco di tipo "head-to-head" (J -> F <- D).
+
+
+\begin{itemize}
+ \item	Si indichino tutte le coppie di nodi che sono indipendenti l'uno dall'altro dati i nodi S, R e D.
+\end{itemize}
+
+ \begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill = white} }
+		\tikzset{VertexStyle/.append  style={fill = gray, text=white} }
+		\Vertex{S}
+		\tikzset{VertexStyle/.append  style={fill = white, text=black} }
+		\tikzset{EdgeStyle/.style={->}}
+		\SO(S){W} 
+		\tikzset{VertexStyle/.append  style={fill = gray, text=white} }
+		\WE(W){R}
+		\tikzset{VertexStyle/.append  style={fill = white, text=black} }
+		\EA(W){J}
+		\SO(R){A}
+		\SO(J){F} 
+		\tikzset{VertexStyle/.append  style={fill = gray, text=white} }
+		\SO(W){D}
+		\Edge(S)(R)
+		\Edge(S)(W)
+		\Edge(S)(J)
+		\Edge(W)(R)
+		\Edge(W)(J)
+		\Edge(R)(A)
+		\Edge(R)(D)
+		\Edge(A)(D)
+		\Edge(D)(F)
+		\Edge(J)(F)
+	\end{tikzpicture}
+\end{center}
+
+
+\end{document}
+
+
+
