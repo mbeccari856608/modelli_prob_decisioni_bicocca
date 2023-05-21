@@ -1,0 +1,362 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{graphs,graphdrawing}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{amsmath}
+
+\usepackage{tkz-graph}
+\usegdlibrary{trees}
+
+
+\usepackage[margin=2cm]{geometry}
+
+\usepackage[utf8]{inputenc}
+\begin{document}
+	\section{Esercitazione 3}
+	
+	\subsection{Esercizio 1}
+	 \begin{center}
+		
+		\begin{tikzpicture}
+			\SetUpEdge[lw         = 1.5pt,
+			color      = orange,
+			labelcolor = white]
+			\GraphInit[vstyle=Normal] 
+			\SetGraphUnit{3}
+			\tikzset{VertexStyle/.append  style={fill}}
+			\Vertex{I}
+			\WE(I){B}
+			\EA(I){M}
+			\SO(I){G}
+			\SO(G){J}
+			\tikzset{EdgeStyle/.style={->}}
+			\Edge(B)(I)
+			\Edge(M)(I)
+			\Edge(I)(G)
+			\Edge(M)(G)
+			\Edge(B)(G)
+			\Edge(G)(J)
+		\end{tikzpicture}
+\end{center}
+
+\begin{minipage}{4cm}
+	\begin{tabular}{|c|}
+		\hline
+		P(B) \\ \hline
+		0.9  \\ \hline
+	\end{tabular}
+\end{minipage}
+\begin{minipage}{4cm}
+	\begin{tabular}{|c|}
+		\hline
+		P(M) \\ \hline
+		1    \\ \hline
+	\end{tabular}
+\end{minipage}
+\begin{minipage}{4cm}
+\begin{tabular}{|c|c|c|}
+	\hline
+	B & M & P(I) \\ \hline
+	T & T & 0.9  \\ \hline
+	T & F & 0.5  \\ \hline
+	F & T & 0.5  \\ \hline
+	F & F & 0.1  \\ \hline
+\end{tabular}
+\end{minipage}
+\begin{minipage}{4cm}
+\begin{tabular}{|c|c|c|c|}
+	\hline
+	B & I & M & P(G) \\ \hline
+	T & T & T & 0.9  \\ \hline
+	T & T & F & 0.8  \\ \hline
+	T & F & T & 0    \\ \hline
+	T & F & F & 0    \\ \hline
+	F & T & T & 0.2  \\ \hline
+	F & T & F & 0.1  \\ \hline
+	F & F & T & 0    \\ \hline
+	F & F & F & 0    \\ \hline
+\end{tabular}
+\end{minipage}
+\begin{tabular}{|c|c|}
+	\hline
+	G & P(J) \\ \hline
+	T & 0.9  \\ \hline
+	F & 0    \\ \hline
+\end{tabular}
+
+\begin{itemize}
+	\item \(P(B,I,M) = P(I) \cdot P(B) \cdot P(M) \)
+\end{itemize}
+Falso, perchè B, I e M non sono indipendenti e quella richiesta è una relazione che vale per variabili indipendenti.
+
+\begin{itemize}
+	\item \(P(J | G) = P(J | G, I) \)
+\end{itemize}
+
+Se prendiamo un nodo in una rete bayesiana questo è indipendente da tutti gli altri nodi data la sua markov blanket: in altre parole se prendo un nodo e i nodi della sua markov blanket sono osservati (c'è la "|") allora quel nodo è indipendente da tutti gli altri nodi all'interno della rete.
+
+In questo caso la markov blanket di J è G che è osservato per cui J è indipendente da tutti gli altri nodi della rete , pertanto l'affermazione è vera.
+
+\begin{itemize}
+	\item \(P(M | G, B, I) = P(M | G, B, I, J) \)
+\end{itemize}
+Vero, i nodi della markov blanket di M sono I, G, B per cui M è indipendente da tutti gli altri (fra cui J)
+
+\pagebreak
+	 \begin{center}
+	
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill}}
+		\Vertex{I}
+		\WE(I){B}
+		\EA(I){M}
+		\SO(I){G}
+		\SO(G){J}
+		\tikzset{EdgeStyle/.style={->}}
+		\Edge(B)(I)
+		\Edge(M)(I)
+		\Edge(I)(G)
+		\Edge(M)(G)
+		\Edge(B)(G)
+		\Edge(G)(J)
+	\end{tikzpicture}
+\end{center}
+
+\begin{minipage}{4cm}
+	\begin{tabular}{|c|}
+		\hline
+		P(B) \\ \hline
+		0.9  \\ \hline
+	\end{tabular}
+\end{minipage}
+\begin{minipage}{4cm}
+	\begin{tabular}{|c|}
+		\hline
+		P(M) \\ \hline
+		1    \\ \hline
+	\end{tabular}
+\end{minipage}
+\begin{minipage}{4cm}
+	\begin{tabular}{|c|c|c|}
+		\hline
+		B & M & P(I) \\ \hline
+		T & T & 0.9  \\ \hline
+		T & F & 0.5  \\ \hline
+		F & T & 0.5  \\ \hline
+		F & F & 0.1  \\ \hline
+	\end{tabular}
+\end{minipage}
+\begin{minipage}{4cm}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		B & I & M & P(G) \\ \hline
+		T & T & T & 0.9  \\ \hline
+		T & T & F & 0.8  \\ \hline
+		T & F & T & 0    \\ \hline
+		T & F & F & 0    \\ \hline
+		F & T & T & 0.2  \\ \hline
+		F & T & F & 0.1  \\ \hline
+		F & F & T & 0    \\ \hline
+		F & F & F & 0    \\ \hline
+	\end{tabular}
+\end{minipage}
+\begin{tabular}{|c|c|}
+	\hline
+	G & P(J) \\ \hline
+	T & 0.9  \\ \hline
+	F & 0    \\ \hline
+\end{tabular}
+
+\begin{itemize}
+	\item Calcolare \(P(b,i, \neg m, g, j)\)
+	
+	\[
+	    P(b,i, \neg m, g, j) = P(b) \cdot P(i | b, \neg m) \cdot P(\neg m) \cdot P(g | b, i, \neg m) \cdot P(j | g)
+	\] = 
+		\[
+	0.9 \cdot 0.5 \cdot 0.7 \cdot 0.8 \cdot 0.9 = 0.2268
+	\]
+\end{itemize}
+
+\pagebreak
+	 \begin{center}
+	
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill}}
+		\Vertex{I}
+		\WE(I){B}
+		\EA(I){M}
+		\SO(I){G}
+		\SO(G){J}
+		\tikzset{EdgeStyle/.style={->}}
+		\Edge(B)(I)
+		\Edge(M)(I)
+		\Edge(I)(G)
+		\Edge(M)(G)
+		\Edge(B)(G)
+		\Edge(G)(J)
+	\end{tikzpicture}
+\end{center}
+
+\begin{minipage}{4cm}
+	\begin{tabular}{|c|}
+		\hline
+		P(B) \\ \hline
+		0.9  \\ \hline
+	\end{tabular}
+\end{minipage}
+\begin{minipage}{4cm}
+	\begin{tabular}{|c|}
+		\hline
+		P(M) \\ \hline
+		1    \\ \hline
+	\end{tabular}
+\end{minipage}
+\begin{minipage}{4cm}
+	\begin{tabular}{|c|c|c|}
+		\hline
+		B & M & P(I) \\ \hline
+		T & T & 0.9  \\ \hline
+		T & F & 0.5  \\ \hline
+		F & T & 0.5  \\ \hline
+		F & F & 0.1  \\ \hline
+	\end{tabular}
+\end{minipage}
+\begin{minipage}{4cm}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		B & I & M & P(G) \\ \hline
+		T & T & T & 0.9  \\ \hline
+		T & T & F & 0.8  \\ \hline
+		T & F & T & 0    \\ \hline
+		T & F & F & 0    \\ \hline
+		F & T & T & 0.2  \\ \hline
+		F & T & F & 0.1  \\ \hline
+		F & F & T & 0    \\ \hline
+		F & F & F & 0    \\ \hline
+	\end{tabular}
+\end{minipage}
+\begin{tabular}{|c|c|}
+	\hline
+	G & P(J) \\ \hline
+	T & 0.9  \\ \hline
+	F & 0    \\ \hline
+\end{tabular}
+
+\begin{itemize}
+	\item Calcolare \( P(J | b, i, m)  \)
+\end{itemize}
+
+In questo caso è richiesto di trovare J maiuscolo, ovvero J è la variabile query e b i m sono le variabili in evidenza.
+
+In particolare è richiesto di effettuare un'operazione di inferenza.
+\\
+
+La richiesta si può riscrivere come :
+
+\( P(J | b, i, m) =  P( j | b, i, m) \cup P( \neg j | b, i, m)    \)
+
+Dobbiamo quindi trovare:
+
+\[
+	P( j | b, i, m) = \alpha \sum_{G}^{} P(j,b,i,m,G)
+\]
+
+e 
+\[
+P( \neg j | b, i, m) = \alpha \sum_{G}^{} P( \neg j,b,i,m,G)
+\]
+
+
+Dove \(G\) è la variabile non osservata.
+
+Iniziamo calcolando 
+\[
+P( j | b, i, m) = \alpha \sum_{G}^{} P(j,b,i,m,G)
+\]
+
+Da cui 
+\[
+ =	\alpha \sum_{G}^{} P(j | G) \cdot P(G | b,i,m) \cdot P(b) \cdot P(m) \cdot P(i | b,m)
+\]
+
+A questo punto possiamo far sparire la sommatoria
+\[
+=	\alpha \cdot (  P(j | g) \cdot P(g | b,i,m) \cdot P(b) \cdot P(m) \cdot P(i | b,m) +  P(j | \neg g) \cdot P( \neg | b,i,m) \cdot P(b) \cdot P(m) \cdot P(i | b,m) )
+\]
+
+\[
+=	\alpha \cdot ( 0.9 \cdot 0.9 \cdot 0.9 \cdot 0.3 \cdot 0.9 + 0 \cdot 0.1 \cdot 0 \cdot 0.3 \cdot 0.9) =
+\]
+
+\[
+=	\alpha \cdot (0.19683) 
+\]
+
+\pagebreak
+
+A questo punto andiamo a calcolare
+
+\[
+P( \neg j | b, i, m) = \alpha \sum_{G}^{} P( \neg j,b,i,m,G)
+\]
+
+Avremo quindi che :
+
+\[
+P( \neg j | b, i, m) = \alpha \sum_{G}^{} P( \neg j,b,i,m,G) = 
+\]
+
+
+\[
+ = 
+ \alpha \sum_{G}^{} P( \neg j | G) \cdot P (G | i, b, m) \cdot P(b) \cdot P(m) \cdot P(i |b, m) = 
+\]
+
+\[
+= 
+\alpha \cdot (P( \neg j | g) \cdot P (g | i, b, m) \cdot P(b) \cdot P(m) \cdot P(i |b, m) + P( \neg j | \neg g) \cdot P (\neg g | i, b, m) \cdot P(b) \cdot P(m) \cdot P(i |b, m)) =
+\]
+
+
+\[
+= 
+\alpha \cdot (0.1 \cdot 0.9 \cdot 0.9 \cdot 0.3 \cdot 0.9 + 1 \cdot 0.1 \cdot 0.9 \cdot 0.3 \cdot 0.9)
+\]
+
+\[
+= 
+\alpha \cdot 0.04617
+\]
+
+Dovevamo calcolare 
+
+\[
+	P(J |b, i,m) = \alpha \cdot < 0.19683; 0.04617 >
+\]
+
+Da cui
+
+\[
+\alpha = \frac{1}{0.19683 + 0.04617} = 4.115
+\]
+
+Infine avremo che 
+\[
+P(J |b, i,m) = 4.115 \cdot < 0.19683; 0.04617 > = <0.81; 0.19>
+\]
+
+\pagebreak
+
+\end{document}
