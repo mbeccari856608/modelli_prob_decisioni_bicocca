@@ -1,1 +1,446 @@
-mpd_4
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{graphs,graphdrawing}
+\usepackage{caption}
+
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{lipsum}
+\usepackage{tkz-graph}
+\usegdlibrary{trees}
+
+
+\usepackage[margin=2cm]{geometry}
+
+\usepackage[utf8]{inputenc}
+\begin{document}
+	\section{Esercitazione 4}
+	\subsection{Esercizio 1}
+
+	 \begin{center}
+	
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill}}
+		\Vertex{SMART}
+		\SOEA(SMART){PREPARED}
+		\NOEA(PREPARED){STUDY}
+		\SO(PREPARED){PASS}
+		\EA(PASS){FAIR}
+		\tikzset{EdgeStyle/.style={->}}
+		\Edge(SMART)(PREPARED)
+		\Edge(SMART)(PASS)
+		\Edge(STUDY)(PREPARED)
+		\Edge(PREPARED)(PASS)
+		\Edge(FAIR)(PASS)
+
+	\end{tikzpicture}
+\end{center}
+\begin{tabular}{|cc|}
+	\hline
+	\multicolumn{2}{|c|}{P(SM)}     \\ \hline
+	\multicolumn{1}{|c|}{0.8} & 0.2 \\ \hline
+\end{tabular}
+\begin{tabular}{|cc|}
+	\hline
+	\multicolumn{2}{|c|}{P(ST)}     \\ \hline
+	\multicolumn{1}{|c|}{0.6} & 0.4 \\ \hline
+\end{tabular}
+\begin{tabular}{|cc|}
+	\hline
+	\multicolumn{2}{|c|}{P(FA)}      \\ \hline
+	\multicolumn{1}{|c|}{0.69} & 0.1 \\ \hline
+\end{tabular}
+\begin{tabular}{|c|c|cc|}
+	\hline
+	SM & ST & \multicolumn{2}{c|}{P(PR | SM, ST)} \\ \hline
+	T  & T  & \multicolumn{1}{c|}{0.9}    & 0.1   \\ \hline
+	T  & F  & \multicolumn{1}{c|}{0.5}    & 0.5   \\ \hline
+	F  & T  & \multicolumn{1}{c|}{0.7}    & 0.3   \\ \hline
+	F  & F  & \multicolumn{1}{c|}{0.1}    & 0.9   \\ \hline
+\end{tabular}
+\begin{tabular}{|c|c|c|cc|}
+	\hline
+	FA & PR & SM & \multicolumn{2}{c|}{P(PA | PR, SM, ST)} \\ \hline
+	T  & T  & T  & \multicolumn{1}{c|}{0.9}      & 0.1     \\ \hline
+	T  & T  & F  & \multicolumn{1}{c|}{0.7}      & 0.3     \\ \hline
+	T  & F  & T  & \multicolumn{1}{c|}{0.7}      & 0.3     \\ \hline
+	T  & F  & F  & \multicolumn{1}{c|}{0.2}      & 0.8     \\ \hline
+	F  & T  & T  & \multicolumn{1}{c|}{0.1}      & 0.9     \\ \hline
+	F  & T  & F  & \multicolumn{1}{c|}{0.1}      & 0.9     \\ \hline
+	F  & F  & T  & \multicolumn{1}{c|}{0.1}      & 0.9     \\ \hline
+	F  & F  & F  & \multicolumn{1}{c|}{0.1}      & 0.9     \\ \hline
+\end{tabular}
+
+\vspace{0.3cm}
+Dobbiamo generare 1000 sample con direct sampling.
+
+Consideriamo come ordine topologico SM, ST, PR, FA, PA
+
+Genera un campione vuol dire generare un valore per ciascuna della variabile che lo compone.
+
+Supponiamo di poter creare un campione $S_1$ \([0.35; \; 0.76; \; 0.51; \; 0.44; \; 0.08]\)
+
+Iniziamo a creare il campione di rete Bayesiana.
+
+Andiamo a vedere dove cade il valore 0.35 sulla distribuzione, e notiamo che essendo <= di 0.8 avremo che \(SM = T;\)
+
+Analogamente per ST avremo 0.76, che essendo > di 0.6 avremo che \(ST = F;\)
+
+Andiamo ora a calcolare PR: nel nostro caso dobbiamo vedere la riga della CPT quando \(SM = T;\) e  \(ST = F;\)
+
+Essendo il valore estratto 0.51 > 0.5 concludiamo che \(PR = F;\)
+
+Per FA come valore abbiamo 0.44 che essendo < 0.69 ci porta a dedurre che \(FA = T;\)
+
+
+Essendo 0.08 < 0.7 concludiamo che \(PA = T\)
+
+Il vettore finale sarà quindi:
+
+\[
+S1 \; = \; [SM = T; \; ST = F; \; PR = F; \; FA = T; \;  PA = T]
+\]
+
+
+
+\begin{mdframed}[hidealllines=true,backgroundcolor=blue!20]
+	La condizione per essere true è di essere <=  al valore nella CPT, quindi se la distribuzione è 0.5 e 0.5 se si estrae 0.5 conta come true
+\end{mdframed}
+
+\pagebreak
+
+Immaginiamo di avere fatto questo procedimento per mille campioni.
+
+Avremo che:
+\begin{itemize}
+	\item 790 \(SM = T\)
+	\item 210 \(SM = F\)
+\end{itemize}
+
+Quindi che la distribuzione della variabile è <0.79, 0.21>
+
+
+Questo metodo di campionamento (campionamento diretto) è utile quando non conoscono nessun valore di nessuna variabile; nel momento in cui conosco il valore di qualche variabile questo metodo risulta poco efficiente perchè potrei ottenere dei valori impossibili rispetto all'evidenza.
+
+Utilizzando sempre la rete bayesiana dell'esercizio precedente,
+supponiamo di dover trovare
+\[
+P(PA = T; \; | \; ST = F)
+\]
+
+Questa richiesta con il direct sampling non sarebbe efficente perchè andremmo a generare dei valori per la variabili ST a true, che non sarebbero utili perchè in contrapposizione con l'evidenza.
+
+Possiamo utilizzare il rejection sampling, utilizzando come ordinamento topologico
+SM, ST, PR, FA, PA
+
+Utilizziamo ancora una volta i valori utilizzati in precedenza, ovvero $S_1$ \([0.35; \; 0.76; \; 0.51; \; 0.44; \; 0.08]\)
+
+Nel campione S1 avevamo che 
+\[
+S1 \; = \; [SM = T; \; ST = F; \; PR = F; \; FA = T; \;  PA = T]
+\]
+
+Essendo \(ST = F\) coerente con l'evidenza vuol dire che accettiamo il campione.
+
+Supponiamo ora di avere:
+$S_2$ \([0.28; \; 0.03; \; 0.92; \; 0.92; \; 0.42]\)
+
+Avremo quindi:
+\[
+S2 \; = \; [SM = T; \; ST = T, \; PR = F \; FA = F\; PA = F]
+\]
+
+Dobbiamo però rigettare il campione perchè il valore non è coerente con l'evidenza.
+
+Supponiamo a questo punto di avere generato 1000 campioni:
+
+\begin{itemize}
+	\item 730 \(ST = T\) -> reject
+	\item 270 \(ST = F\) -> accept
+\end{itemize}
+
+Dobbiamo considerare solo i 270 accettati, supponiamo che siano distribuiti in questa maniera:
+
+\begin{itemize}
+	\item 130 \(PA = T\)
+	\item 140 \(PA = F\)
+\end{itemize}
+
+Avremo quindi che 
+\[
+	P(PA | ST = F) = \alpha \cdot < 130; \; 140 > = <0.48; 0.52>
+\]
+
+\pagebreak
+\subsection{Esercizio 2}
+\begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill}}
+		\Vertex{A}
+		\NOWE(A){B}
+		\SOEA(A){M}
+		\SOWE(A){J}
+		\NOEA(A){E}
+		\tikzset{EdgeStyle/.style={->}}
+		\Edge(B)(A)
+		\Edge(E)(A)
+		\Edge(A)(J)
+		\Edge(A)(M)
+	\end{tikzpicture}
+\end{center}
+
+\begin{tabular}{cc}
+	\multicolumn{2}{c}{P(B)}                                 \\ \hline
+	\multicolumn{1}{|c|}{T}     & \multicolumn{1}{c|}{F}     \\ \hline
+	\multicolumn{1}{|c|}{0.001} & \multicolumn{1}{c|}{0.999} \\ \hline
+\end{tabular}
+\begin{tabular}{cc}
+	\multicolumn{2}{c}{P(E)}                                 \\ \hline
+	\multicolumn{1}{|c|}{T}     & \multicolumn{1}{c|}{F}     \\ \hline
+	\multicolumn{1}{|c|}{0.002} & \multicolumn{1}{c|}{0.998} \\ \hline
+\end{tabular}
+\begin{tabular}{cccc}
+	\multicolumn{4}{c}{P(A | B, E)}                                                                            \\ \hline
+	\multicolumn{1}{|c|}{B} & \multicolumn{1}{c|}{E} & \multicolumn{1}{c|}{T}     & \multicolumn{1}{c|}{F}     \\ \hline
+	\multicolumn{1}{|c|}{T} & \multicolumn{1}{c|}{T} & \multicolumn{1}{c|}{0.95}  & \multicolumn{1}{c|}{0.05}  \\ \hline
+	\multicolumn{1}{|c|}{T} & \multicolumn{1}{c|}{F} & \multicolumn{1}{c|}{0.94}  & \multicolumn{1}{c|}{0.06}  \\ \hline
+	\multicolumn{1}{|c|}{F} & \multicolumn{1}{c|}{T} & \multicolumn{1}{c|}{0.29}  & \multicolumn{1}{c|}{0.71}  \\ \hline
+	\multicolumn{1}{|c|}{F} & \multicolumn{1}{c|}{F} & \multicolumn{1}{c|}{0.001} & \multicolumn{1}{c|}{0.999} \\ \hline
+\end{tabular}
+\begin{tabular}{ccc}
+	\multicolumn{3}{c}{P(M | A)}                                                    \\ \hline
+	\multicolumn{1}{|c|}{A} & \multicolumn{1}{c|}{T}    & \multicolumn{1}{c|}{F}    \\ \hline
+	\multicolumn{1}{|c|}{T} & \multicolumn{1}{c|}{0.7}  & \multicolumn{1}{c|}{0.3}  \\ \hline
+	\multicolumn{1}{|c|}{F} & \multicolumn{1}{c|}{0.01} & \multicolumn{1}{c|}{0.99} \\ \hline
+\end{tabular}
+\begin{tabular}{ccc}
+	\multicolumn{3}{c}{P(J | A)}                                                    \\ \hline
+	\multicolumn{1}{|c|}{A} & \multicolumn{1}{c|}{T}    & \multicolumn{1}{c|}{F}    \\ \hline
+	\multicolumn{1}{|c|}{T} & \multicolumn{1}{c|}{0.9}  & \multicolumn{1}{c|}{0.1}  \\ \hline
+	\multicolumn{1}{|c|}{F} & \multicolumn{1}{c|}{0.05} & \multicolumn{1}{c|}{0.95} \\ \hline
+\end{tabular}
+
+\begin{itemize}
+	\item Trovare la probabilità \(P(B = T| J = T, M = F)\) con Likelihood weighting
+\end{itemize}
+
+Anche per likelihood weighting dobbiamo utilizzare un ordine topologico, utilizziamo\(B, E , A ,J ,M \)
+
+I campioni saranno:
+
+\[
+S1 = [0.9994; \; 0.89; \;  0.3; \;  /; \;  /]
+\]
+
+\[
+S2 = [0.7; \; 0.9; \;  0.6; \;  /; \;  /]
+\]
+
+Rispetto al campione S1 avremo che:
+
+\[
+S1 = [T; F; T; T; F]
+\]
+
+A questo punto dobbiamo calcolare il peso per S1, ovvero la produttoria delle variabili per le quali conosciamo l'evidenza  condizionate ai genitori:
+
+\[
+ w_{S_1} = P(J = T | A = T) \cdot P(M = F | A = T) = 0.9 \cdot 0.3 = 0.27
+\]
+
+Analogamente avremo per S2:
+
+\[
+S2 = [F; F; F; T; F]
+\]
+
+Andiamo a stimare il peso:
+
+
+
+\[
+w_{S_2} = P(J = T | A = F) \cdot P(M = F | A = F) = 0.05 \cdot 0.99 = 0.0495
+\]
+
+\pagebreak
+Andiamo infine a stimare il valore richiesto che risulta essere:
+\[P(B = T | J = T, M = F) = \frac{\sum_{S_i : B = T} w_{s_i}}{{\sum_{S_i} w_{s_i}}} \]
+
+Stiamo mettendo a rapporto i casi in cui la nostra variabile query assume valore uguale a vero rispetto a tutti i casi.
+
+avremo quindi:
+\[\frac{\sum_{S_i : B = T} w_{s_i}}{{\sum_{S_i} w_{s_i}}} = \frac{0.27}{0.27 + 0.0495} = 0.8450 \]
+
+\pagebreak
+
+\subsection{Esercizio 3}
+\begin{center}
+	\begin{tikzpicture}
+		\SetUpEdge[lw         = 1.5pt,
+		color      = orange,
+		labelcolor = white]
+		\GraphInit[vstyle=Normal] 
+		\SetGraphUnit{3}
+		\tikzset{VertexStyle/.append  style={fill}}
+		\Vertex{S}
+		\SOEA(S){LC}
+		\SOWE(S){HD}
+		\SOWE(LC){BD}
+		\tikzset{EdgeStyle/.style={->}}
+		\Edge(S)(LC)
+		\Edge(S)(HD)
+		\Edge(HD)(BD)
+		\Edge(LC)(BD)
+
+	\end{tikzpicture}
+\end{center}
+\begin{tabular}{|c|c|}
+	\hline
+	P(S=T) & P(S = F) \\ \hline
+	0.4    & 0.6      \\ \hline
+\end{tabular}
+\begin{tabular}{|c|c|c|}
+	\hline
+	S & P(HD = T) & P(HD = F) \\ \hline
+	T & 0.4       & 0.6       \\ \hline
+	F & 0.3       & 0.7       \\ \hline
+\end{tabular}
+\begin{tabular}{|c|c|c|}
+	\hline
+	S & P(LC = T) & P(LC = F) \\ \hline
+	T & 0.7       & 0.3       \\ \hline
+	F & 0.2       & 0.8       \\ \hline
+\end{tabular}
+\begin{tabular}{|c|c|c|c|}
+	\hline
+	HD & LC & P(BD = T) & P(BD = F) \\ \hline
+	T  & T  & 0.4       & 0.6       \\ \hline
+	F  & T  & 0.7       & 0.3       \\ \hline
+	T  & F  & 0.5       & 0.5       \\ \hline
+	F  & F  & 0.2       & 0.8       \\ \hline
+\end{tabular}
+
+
+La richiesta è di stimare con il metodo markov chain montecarlo la distribuzione di probabilità di \(P(HD | S = T, BD = T )\).
+
+Con MCMC non è necessario mantenere l'ordine topologico.
+
+Il MCMC è diviso in tre passi:
+
+\begin{itemize}
+	\item Fisso le evidenze (S e BD nel nostro caso)
+	\item Inizializzo tutte le variabili senza evidenza in modo casuale, ad esempio nel nostro caso prendiamo LD = T e HD = F
+	Avremo così lo stato $S_0 = [ S= T, HD = F, LC = T, BD = T]$; sarebbe stato equivalente avere come stato iniziale  $[ S= T,LC = T, HD = F, BD = T]$ o altre permutazioni.
+	
+	\item Campionare le variabili non osservate, sia quelle nascoste che la variabili query, data la relativa markov blanket. Per ciascuna delle variabili non osservate dovrò determinare ad ogni iterazione:
+	
+	\[ P(X | MB(X))\ = \alpha \cdot P(X | Pa(X)) \cdot  
+	\prod_{y \; \in \; children(x)} P(y | Pa(y)) \] 
+	
+	Dove MB è la markov blanket della variabile \(X\)
+		
+\end{itemize}
+
+Iniziamo a  a campionare LC data la sua MB, dobbiamo stimare sia la parte vera che la parte falsa:
+
+\begin{itemize}
+	\item \(P(LC = T | S = T, HD = F, BD = T)\) 
+	\\
+	I valori sono quelli presi dallo stato $S_0$.
+	\[
+	 = \alpha \cdot P(LC = T | S = T) \cdot P(BD = T | LC = T, HD = F) = 
+	\]
+	
+	\[
+	 = \alpha \cdot 0.7 \cdot 0.5 = 0.35
+	\]
+	
+	\item \(P(LC = F | S = T, HD = F, BD = T)\) 
+	
+	\[
+	 = \alpha \cdot P(LC | F | S = T) \cdot P(BD = T | LC = F, HD = F) = 
+	\]
+	
+	\[
+	= 0.3 \cdot 0.2 = 0.06
+	\]
+	
+\end{itemize}
+
+\pagebreak
+
+\[
+P(LC | MB(LC)) = \alpha < 0.35; 0.06> = <0.853; 0.147>
+\]
+
+Supponiamo di generare un numero casuale e di ottenere un valore che ci porta a dire che \(LC = F\).
+
+Avremo a questo punto un nuovo stato $S_1$:
+
+$S_1 = [S = T; HD = F; LC = F; BD = T;]$
+
+A questo punto dobbiamo calcolare \(P(HD | MB(HD))\)
+
+\begin{itemize}
+	\item \(P(HD = T | S= T, LC = F, BD = T  )\)
+	\[
+	 = \alpha \cdot P(HD = T | S = T) \cdot P(BD = T | HD = T, LC = F) =
+	\]
+	
+	\[
+	= \alpha \cdot 0.4 \cdot 0.7  = 0.28
+	\]
+	
+	
+	\item \(P(HD = F | S = T, LC = F, BD = T)\)
+	\[
+	 = \alpha \cdot P(HD = F | S = T) \cdot P(BD = T | HD = F, LC = F) =
+	\]
+	\[
+	= \alpha \cdot 0.6 \cdot 0.2 = 0.12
+	\]
+\end{itemize}
+
+Avremo quindi che \(P(HD | MB(HD))\) = \(\alpha <0.28; 0.12>\) = \(<0.7; 0.3>\)
+
+Supponiamo di estrarre un numero casuale che ci porta a determinare il valore \(HD = T\)
+
+Avremo quindi un nuovo stato 
+\[
+S_2 = [S = T; HD = T; LC =F; BD = T;]
+\]
+
+
+Sucessivamente si procede ricampionando LC, poi ancora HD ( partendo dai valori in $S_2$)e così via.
+
+
+Supponiamo di avere generato 1000 sample, di cui 
+
+\begin{itemize}
+
+\item 800 HD = T
+\item 200 HD = F
+
+\end{itemize}
+
+Avremo quindi che \(P(HD | S = T, BD = T) = <0.8;0.2>\)
+
+Inizialmente i valori della variabile campionata saranno molto divergenti, dopo di che tenderanno a uniformarsi con l'aumentare delle iterazioni.
+
+La fase iniziale è detta di burn in, perchè i valori della variabile campionata oscillano molto e vengono eliminati.
+
+Si puo scegliere il valore finale o una finestra delle ultime stime.
+
+
+\end{document}
